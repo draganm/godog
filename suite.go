@@ -426,6 +426,12 @@ func (s *suite) runPickle(pickle *messages.Pickle) (err error) {
 		ctx = context.Background()
 	}
 
+	var cancel context.CancelFunc
+
+	ctx, cancel = context.WithCancel(ctx)
+
+	defer cancel()
+
 	if len(pickle.Steps) == 0 {
 		pr := models.PickleResult{PickleID: pickle.Id, StartedAt: utils.TimeNowFunc()}
 		s.storage.MustInsertPickleResult(pr)
